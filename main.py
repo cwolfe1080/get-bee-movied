@@ -32,7 +32,7 @@ def execute():
 
     # Sign in the user using the session data above
     print("Connecting to user...")
-    user = session.connect_linked_usr()
+    user = session.connect_linked_user()
     # Fetch new user data
     print("Fetching user data...")
     user.update()
