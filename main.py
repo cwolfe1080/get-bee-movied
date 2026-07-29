@@ -1,13 +1,26 @@
 import scratchattach as sa
 import time
+import getpass
 
 def execute():
     # Get credentials from user
     uname = input("Enter Scratch username: ")
-    pswd = input("Enter Scratch password: ")
+    pswd = getpass.getpass("Enter Scratch password: ")
 
+    print("Logging in...")
     # Login to scratch using provided credentials
     session = sa.login(f"{uname}", f"{pswd}") #Returns a sa.Session object
+
+    # Check to see if the account has a verified email. Accounts without verified emails cannot post comments
+    user.update()
+    print("Checking for account email verification...")
+    if not session.has_outstanding_email_confirmation :
+        print("Please verify the email address associated with this account, or use another account with a verified email address.")
+        exit()
+    else:
+        pass
+    
+        
 
 
     
