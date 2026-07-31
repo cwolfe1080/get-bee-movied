@@ -2,6 +2,8 @@ print("Loading...")
 import scratchattach as sa
 import time
 import getpass
+import random
+import sys
 
 def execute():
     # Get credentials from user
@@ -73,11 +75,85 @@ def execute():
         print(f"Target Author:             {project.author_name}")
         exit()
 
-    print("Ready to execute. Type 'get-bee-movied' if you wish to execute. (case sensitive)")
+    # Prepare to execute
+    print("Ready to execute.")
+    print("")
+    print('NOTE: Executing may take a long time. Consider the statistics below:')
+    print("Execution time for 'Scratcher' users:")
+    print("MINIMUM: 19 minutes")
+    print("AVERAGE: 37 minutes and 13 seconds")
+    print("MAXIMUM: 55 minutes and 25 seconds")
+    print("Execution time for 'New Scratcher' users:")
+    print("MINIMUM: 1 hour, 3 minutes, and 20 seconds")
+    print("AVERAGE: 1 hour, 27 minutes, and 5 seconds")
+    print("MAXIMUM: 1 hour, 50 minutes, and 50 seconds")
+    print("")
+    print("Type 'get-bee-movied' if you wish to execute. (case sensitive)")
     execute = input("> ")
     if execute == "get-bee-movied":
-        for i in range(1, 97):
-            print(str(i) + "/97")
+        print('Executing...')
+        print('--------------------------------------------------------------')
+        print('Press Ctrl+C to abort execution (may not work on some systems)')
+        print('--------------------------------------------------------------')
+        # Post the initial comment
+        print("Posting parent comment...")
+        firstComment = project.post_comment(script1)
+        # Store the comment id from the parent comment so that we can reference it later
+        print("Storing parent info...")
+        parent = firstComment.id
+
+        # Start progress timer
+        start_time = time.time()
+        total = 96
+
+        print("Starting loop...")
+        # Loop for the rest of the script
+        for i in range(2, 97):
+        
+            # Progress information
+            current = i - 1  # Parent comment counts as #1
+        
+            elapsed = time.time() - start_time
+            avg_time = elapsed / current if current else 0
+        
+            remaining = total - current
+            eta = avg_time * remaining
+        
+            eta_min = int(eta // 60)
+            eta_sec = int(eta % 60)
+        
+            percent = current / total * 100
+        
+            bar_length = 30
+            filled = int(bar_length * current / total)
+            bar = "█" * filled + "-" * (bar_length - filled)
+        
+            sys.stdout.write(
+                f"\r[{bar}] {percent:5.1f}% ({current}/{total}) | ETA {eta_min:02}:{eta_sec:02}"
+            )
+            sys.stdout.flush()
+        
+            # Delay to prevent comment cooldown and spam bans
+            if new:
+                time.sleep(random.uniform(40, 70))
+            else:
+                time.sleep(random.uniform(12, 35))
+        
+            # Retrieve the data from the variable
+            refName = f"script{i}"
+            data = globals()[refName]
+        
+            project.reply_comment(data, parent_id=parent, commentee_id="")
+        
+        # Finish the progress bar
+        sys.stdout.write(
+            f"\r[{'█'*30}] 100.0% ({total}/{total}) | ETA 00:00\n"
+        )
+        sys.stdout.flush()
+        
+        print("\nFinished!")
+            
+            
             
     else:
         print("Execution aborted.")
@@ -190,7 +266,7 @@ script97 = "ve got to start thinking bee, my friend.Thinking bee!Me?Hold it. Let
 # Startup
 print("get-bee-movied by cwolfe1080 under the Apache License 2.0")
 time.sleep(1)
-print("==============================================================")
+print("==========================================================================================")
 print("NOTE:")
 print("This script DOES NOT store any personal information")
 print("Executing this script may result in temporary bans on Scratch.")
